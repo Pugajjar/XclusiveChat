@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>XclusiveChat Web</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "app-primary": "#2b6cee", 
+              "xc-bg": "#1f1f1f",         
+              "xc-container": "#292929",  
+              "xc-border": "#525252",     
+              "xc-hover": "#333333",      
+              "xc-input": "#383838",      
+              "xc-text-primary": "#e9edef",
+              "xc-text-secondary": "#aebac1",
+              "light-bg": "#f0f2f5",
+              "light-container": "#ffffff",
+              "light-border": "#e0e0e0",
+            },
+            fontFamily: {
+              "sans": ["Segoe UI", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"]
+            },
+            backgroundImage: {
+              'chat-doodle-dark': "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')",
+              'chat-doodle-light': "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')",
+            },
+            animation: {
+                'pop-in': 'popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+            },
+            keyframes: {
+                popIn: {
+                    '0%': { opacity: '0', transform: 'scale(0.9) translateY(10px)' },
+                    '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                }
+            }
+          },
+        },
+      }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 6px !important; height: 6px !important; }
+        ::-webkit-scrollbar-thumb { background-color: #525252; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+
+        .material-symbols-rounded { font-size: 24px; user-select: none; transition: color 0.2s; }
+        .nav-icon { font-size: 28px; }
+        .doodle-bg { opacity: 0.05; background-repeat: repeat; } 
+
+        /* Mobile Transitions */
+        #main-chat-area { transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        @media (min-width: 768px) { #main-chat-area { transform: translateX(0) !important; } }
+        .mobile-chat-active #main-chat-area { transform: translateX(0); }
+        
+        /* Active Tab Indicator */
+        .nav-item.active { color: #2b6cee; position: relative; }
+        .nav-item.active::before {
+            content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%);
+            height: 20px; width: 3px; background-color: #2b6cee; border-radius: 0 4px 4px 0;
+        }
+
+        /* Input Floating Labels */
+        .floating-input:focus ~ label, .floating-input:not(:placeholder-shown) ~ label {
+            top: -10px; left: 10px; font-size: 12px; color: #2b6cee; background-color: inherit; padding: 0 4px;
+        }
+        .floating-input ~ label { transition: 0.2s; background-color: inherit; }
+
+        /* Color Swatches */
+        .color-swatch { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s; }
+        .color-swatch:hover { transform: scale(1.1); border-color: white; }
+    </style>
+</head>
+<body class="bg-light-bg dark:bg-xc-bg h-screen w-screen overflow-hidden text-[#111b21] dark:text-xc-text-primary transition-colors duration-200 font-sans">
+
+    <!-- ========================================== -->
+    <!-- 1. AUTHENTICATION LAYER (Login/Signup)     -->
+    <!-- ========================================== -->
+    <div id="auth-layer" class="absolute inset-0 z-50 bg-light-bg dark:bg-xc-bg flex flex-col items-center justify-center p-4 transition-opacity duration-500">
+        
+        <!-- Brand Header -->
+        <div class="mb-8 flex items-center gap-3 animate-[fadeIn_0.5s_ease-out]">
+             <div class="w-12 h-12 bg-app-primary rounded-2xl flex items-center justify-center shadow-lg shadow-app-primary/20">
+                <span class="material-symbols-rounded text-white text-3xl">chat_bubble</span>
+             </div>
+             <h1 class="text-3xl font-bold text-gray-800 dark:text-white tracking-tight">XclusiveChat</h1>
+        </div>
+
+        <!-- LOGIN CARD -->
+        <div id="login-card" class="w-full max-w-[400px] bg-light-container dark:bg-xc-container p-8 rounded-3xl shadow-2xl border border-light-border dark:border-xc-border animate-[popIn_0.4s_ease-out]">
+            <h2 class="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Welcome back</h2>
+            <p class="text-gray-500 dark:text-xc-text-secondary mb-8">Please enter your details to sign in.</p>
+            
+            <div class="space-y-5">
+                <div class="relative bg-inherit">
+                    <input type="email" id="login-email" class="peer floating-input w-full h-12 rounded-xl bg-transparent border border-gray-300 dark:border-xc-border focus:border-app-primary focus:ring-0 px-4 text-gray-800 dark:text-white placeholder-transparent" placeholder="Email">
+                    <label for="login-email" class="absolute left-4 top-3 text-gray-500 dark:text-xc-text-secondary text-sm pointer-events-none">Email address</label>
+                </div>
+                <div class="relative bg-inherit">
+                    <input type="password" id="login-pass" class="peer floating-input w-full h-12 rounded-xl bg-transparent border border-gray-300 dark:border-xc-border focus:border-app-primary focus:ring-0 px-4 text-gray-800 dark:text-white placeholder-transparent" placeholder="Password">
+                    <label for="login-pass" class="absolute left-4 top-3 text-gray-500 dark:text-xc-text-secondary text-sm pointer-events-none">Password</label>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-2 mb-6">
+                <a href="#" class="text-sm text-app-primary hover:underline">Forgot password?</a>
+            </div>
+
+            <button onclick="performLogin()" class="w-full h-12 bg-app-primary hover:bg-blue-600 text-white font-semibold rounded-xl transition-transform active:scale-95 shadow-lg shadow-app-primary/25">Sign In</button>
+            
+            <div class="mt-6 text-center text-sm text-gray-500 dark:text-xc-text-secondary">
+                Don't have an account? <button onclick="switchAuth('signup')" class="text-app-primary font-semibold hover:underline">Sign up</button>
+            </div>
+        </div>
+
+        <!-- SIGNUP CARD (Hidden by default) -->
+        <div id="signup-card" class="hidden w-full max-w-[400px] bg-light-container dark:bg-xc-container p-8 rounded-3xl shadow-2xl border border-light-border dark:border-xc-border animate-[popIn_0.4s_ease-out]">
+            <h2 class="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Create account</h2>
+            <p class="text-gray-500 dark:text-xc-text-secondary mb-8">Start chatting with your friends today.</p>
+            
+            <div class="space-y-5">
+                 <div class="relative bg-inherit">
+                    <input type="text" class="peer floating-input w-full h-12 rounded-xl bg-transparent border border-gray-300 dark:border-xc-border focus:border-app-primary focus:ring-0 px-4 text-gray-800 dark:text-white placeholder-transparent" placeholder="Name">
+                    <label class="absolute left-4 top-3 text-gray-500 dark:text-xc-text-secondary text-sm pointer-events-none">Full Name</label>
+                </div>
+                <div class="relative bg-inherit">
+                    <input type="email" class="peer floating-input w-full h-12 rounded-xl bg-transparent border border-gray-300 dark:border-xc-border focus:border-app-primary focus:ring-0 px-4 text-gray-800 dark:text-white placeholder-transparent" placeholder="Email">
+                    <label class="absolute left-4 top-3 text-gray-500 dark:text-xc-text-secondary text-sm pointer-events-none">Email address</label>
+                </div>
+                <div class="relative bg-inherit">
+                    <input type="password" class="peer floating-input w-full h-12 rounded-xl bg-transparent border border-gray-300 dark:border-xc-border focus:border-app-primary focus:ring-0 px-4 text-gray-800 dark:text-white placeholder-transparent" placeholder="Password">
+                    <label class="absolute left-4 top-3 text-gray-500 dark:text-xc-text-secondary text-sm pointer-events-none">Password</label>
+                </div>
+            </div>
+
+            <button onclick="performLogin()" class="w-full h-12 bg-app-primary hover:bg-blue-600 text-white font-semibold rounded-xl mt-8 transition-transform active:scale-95 shadow-lg shadow-app-primary/25">Sign Up</button>
+            
+            <div class="mt-6 text-center text-sm text-gray-500 dark:text-xc-text-secondary">
+                Already have an account? <button onclick="switchAuth('login')" class="text-app-primary font-semibold hover:underline">Sign in</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. MAIN APPLICATION LAYER                  -->
+    <!-- ========================================== -->
+    <div id="app-layer" class="hidden h-full w-full flex opacity-0 transition-opacity duration-500">
+
+        <!-- NAVIGATION RAIL -->
+        <nav class="w-[64px] md:w-[72px] h-full flex flex-col items-center py-6 bg-light-container dark:bg-xc-container border-r border-light-border dark:border-xc-border shrink-0 z-20 justify-between">
+            <div class="flex flex-col items-center gap-6 w-full">
+                <div class="relative group cursor-pointer" title="Profile" onclick="toggleSettings(true)">
+                    <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-transparent group-hover:ring-app-primary transition-all">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAUc0grIfwUpU3DRNopFxKmhFG12BmUWu0FH3go5xB-0aF0sSieIguxAhGnNDHneWvWjYVlKY4KVe0eGXbBftfCsJNvvPhT8AXk47fk1m20ERi0kBVRw1MynRs-DyBIUjNzNOcTwzvvJO2RqB2erO1IUfXy1MmQeojab9XD2ODWfcP-hA4_lGjA9U4n2ZdRwkm1QtmrBIU7afimqjNXsVQPVls_YBFoUzuBInjelWdL7HRa7r6Pa_XeccNTlULP-SzBZj7kdyk1GQ" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-xc-container rounded-full"></div>
+                </div>
+                <!-- Tabs -->
+                <button id="tab-chats" class="nav-item active text-gray-500 dark:text-xc-text-secondary hover:bg-gray-100 dark:hover:bg-xc-hover p-3 rounded-xl transition-colors" title="Chats" onclick="switchTab('chats')">
+                    <span class="material-symbols-rounded nav-icon">chat</span>
+                </button>
+                <button id="tab-communities" class="nav-item text-gray-500 dark:text-xc-text-secondary hover:bg-gray-100 dark:hover:bg-xc-hover p-3 rounded-xl transition-colors" title="Communities" onclick="switchTab('communities')">
+                    <span class="material-symbols-rounded nav-icon">groups</span>
+                </button>
+                <button id="tab-status" class="nav-item text-gray-500 dark:text-xc-text-secondary hover:bg-gray-100 dark:hover:bg-xc-hover p-3 rounded-xl transition-colors" title="Status" onclick="switchTab('status')">
+                    <span class="material-symbols-rounded nav-icon">data_usage</span>
+                </button>
+            </div>
+            <div class="flex flex-col items-center gap-6 w-full">
+                <button onclick="toggleSettings(true)" class="text-gray-500 dark:text-xc-text-secondary hover:bg-gray-100 dark:hover:bg-xc-hover p-3 rounded-xl transition-colors" title="Settings">
+                    <span class="material-symbols-rounded nav-icon">settings</span>
+                </button>
+                <button onclick="toggleTheme()" class="text-gray-500 dark:text-xc-text-secondary hover:bg-gray-100 dark:hover:bg-xc-hover p-3 rounded-xl transition-colors mb-2" title="Toggle Theme">
+                    <span class="material-symbols-rounded nav-icon">dark_mode</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- DYNAMIC SIDEBAR PANEL -->
+        <aside id="list-panel" class="w-full md:w-[380px] lg:w-[420px] h-full flex flex-col bg-light-bg dark:bg-xc-bg border-r border-light-border dark:border-xc-border relative z-10">
+            
+            <!-- PANEL CONTENT: CHATS -->
+            <div id="panel-chats" class="h-full flex flex-col">
+                <div class="h-[64px] px-4 flex items-center justify-between shrink-0">
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white tracking-tight">Chats</h1>
+                    <div class="flex gap-2">
+                        <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-xc-hover text-gray-600 dark:text-xc-text-secondary transition-colors"><span class="material-symbols-rounded">edit_square</span></button>
+                        <button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-xc-hover text-gray-600 dark:text-xc-text-secondary transition-colors"><span class="material-symbols-rounded">filter_list</span></button>
+                    </div>
+                </div>
+                <div class="px-4 pb-3 shrink-0">
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-xc-text-secondary"><span class="material-symbols-rounded text-[20px]">search</span></span>
+                        <input id="search-input" type="text" placeholder="Search" onkeyup="filterChats()" class="w-full h-10 pl-10 pr-4 rounded-xl bg-gray-100 dark:bg-xc-input border border-transparent focus:border-app-primary focus:ring-0 text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all">
+                    </div>
+                </div>
+                <div id="chat-list" class="flex-1 overflow-y-auto px-3 pb-2 space-y-1 custom-scrollbar"></div>
+            </div>
+
+            <!-- PANEL CONTENT: STATUS (Hidden by default) -->
+            <div id="panel-status" class="h-full flex-col hidden">
+                <div class="h-[64px] px-4 flex items-center justify-between shrink-0 border-b border-light-border dark:border-xc-border">
+                    <h1 class="text-xl font-bold text-gray-800 dark:text-white">Status</h1>
+                </div>
+                <div class="flex-1 overflow-y-auto custom-scrollbar p-4">
+                    <!-- My Status -->
+                    <div class="flex items-center gap-4 p-2 mb-6 cursor-pointer">
+                        <div class="relative">
+                            <div class="w-12 h-12 rounded-full overflow-hidden"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAUc0grIfwUpU3DRNopFxKmhFG12BmUWu0FH3go5xB-0aF0sSieIguxAhGnNDHneWvWjYVlKY4KVe0eGXbBftfCsJNvvPhT8AXk47fk1m20ERi0kBVRw1MynRs-DyBIUjNzNOcTwzvvJO2RqB2erO1IUfXy1MmQeojab9XD2ODWfcP-hA4_lGjA9U4n2ZdRwkm1QtmrBIU7afimqjNXsVQPVls_YBFoUzuBInjelWdL7HRa7r6Pa_XeccNTlULP-SzBZj7kdyk1GQ" class="w-full h-full object-cover"></div>
+                            <div class="absolute bottom-0 right-0 w-5 h-5 bg-app-primary rounded-full border-2 border-light-bg dark:border-xc-bg flex items-center justify-center text-white"><span class="material-symbols-rounded text-[14px]">add</span></div>
+                        </div>
+                        <div>
+                            <h3 class="text-gray-900 dark:text-white font-medium">My Status</h3>
+                            <p class="text-sm text-gray-500 dark:text-xc-text-secondary">Tap to add status update</p>
+                        </div>
+                    </div>
+                    <p class="text-xs font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wide">Recent updates</p>
+                    <!-- Dummy Statuses -->
+                    <div class="space-y-2">
+                         <div class="flex items-center gap-4 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-xc-hover cursor-pointer">
+                            <div class="w-12 h-12 rounded-full p-[2px] bg-app-primary"><img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-full h-full rounded-full border-2 border-light-bg dark:border-xc-bg object-cover"></div>
+                            <div><h3 class="text-gray-900 dark:text-white font-medium">Emma Wilson</h3><p class="text-sm text-gray-500 dark:text-xc-text-secondary">Today, 10:23 AM</p></div>
+                         </div>
+                         <div class="flex items-center gap-4 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-xc-hover cursor-pointer">
+                            <div class="w-12 h-12 rounded-full p-[2px] bg-app-primary"><img src="https://randomuser.me/api/portraits/men/86.jpg" class="w-full h-full rounded-full border-2 border-light-bg dark:border-xc-bg object-cover"></div>
+                            <div><h3 class="text-gray-900 dark:text-white font-medium">David Kim</h3><p class="text-sm text-gray-500 dark:text-xc-text-secondary">Yesterday, 8:45 PM</p></div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL CONTENT: COMMUNITIES (Hidden by default) -->
+            <div id="panel-communities" class="h-full flex-col hidden items-center justify-center p-8 text-center">
+                 <div class="w-32 h-32 bg-light-container dark:bg-xc-container rounded-2xl border border-light-border dark:border-xc-border flex items-center justify-center mb-6 shadow-sm">
+                     <span class="material-symbols-rounded text-6xl text-app-primary">diversity_3</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Communities</h3>
+                <p class="text-gray-500 dark:text-xc-text-secondary max-w-xs">Stay connected with your schools, neighborhoods, and interest groups.</p>
+                <button class="mt-6 px-6 py-2 bg-app-primary text-white rounded-full font-medium hover:bg-blue-600">Start a Community</button>
+            </div>
+
+            <!-- SETTINGS DRAWER (Overlay) -->
+            <div id="settings-drawer" class="absolute inset-0 bg-light-bg dark:bg-xc-bg z-30 transform -translate-x-full transition-transform duration-300 flex flex-col border-r border-xc-border overflow-hidden">
+                <!-- Settings code same as previous, kept separate for modularity -->
+                 <div id="settings-main-view" class="w-full h-full flex flex-col transition-transform duration-300">
+                    <div class="h-[64px] px-4 flex items-center gap-4 border-b border-light-border dark:border-xc-border shrink-0">
+                        <button onclick="toggleSettings(false)" class="hover:bg-gray-200 dark:hover:bg-xc-hover rounded-full p-2 -ml-2 transition-colors"><span class="material-symbols-rounded text-gray-800 dark:text-white">arrow_back</span></button>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Settings</h2>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                        <div class="bg-light-container dark:bg-xc-container p-4 rounded-2xl border border-light-border dark:border-xc-border flex items-center gap-4">
+                            <div class="w-16 h-16 rounded-full overflow-hidden"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAUc0grIfwUpU3DRNopFxKmhFG12BmUWu0FH3go5xB-0aF0sSieIguxAhGnNDHneWvWjYVlKY4KVe0eGXbBftfCsJNvvPhT8AXk47fk1m20ERi0kBVRw1MynRs-DyBIUjNzNOcTwzvvJO2RqB2erO1IUfXy1MmQeojab9XD2ODWfcP-hA4_lGjA9U4n2ZdRwkm1QtmrBIU7afimqjNXsVQPVls_YBFoUzuBInjelWdL7HRa7r6Pa_XeccNTlULP-SzBZj7kdyk1GQ" class="w-full h-full object-cover"></div>
+                            <div><h3 class="text-lg font-medium text-gray-900 dark:text-white">John Doe</h3><p class="text-sm text-gray-500 dark:text-xc-text-secondary">At work 💼</p></div>
+                        </div>
+                        <div class="bg-light-container dark:bg-xc-container rounded-2xl border border-light-border dark:border-xc-border overflow-hidden">
+                            <div class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-xc-hover cursor-pointer border-b border-light-border dark:border-xc-border"><span class="material-symbols-rounded text-gray-500 dark:text-xc-text-secondary">lock</span><span class="text-gray-800 dark:text-xc-text-primary">Privacy</span></div>
+                            <div onclick="openWallpaperSettings()" class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-xc-hover cursor-pointer"><span class="material-symbols-rounded text-gray-500 dark:text-xc-text-secondary">wallpaper</span><span class="text-gray-800 dark:text-xc-text-primary flex-1">Chat Wallpaper</span><span class="material-symbols-rounded text-gray-400 text-sm">chevron_right</span></div>
+                            <div onclick="toggleLogout()" class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-xc-hover cursor-pointer text-red-500"><span class="material-symbols-rounded">logout</span><span>Log out</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Wallpaper Sub-view -->
+                <div id="settings-wallpaper-view" class="w-full h-full flex flex-col absolute inset-0 bg-light-bg dark:bg-xc-bg transform translate-x-full transition-transform duration-300">
+                    <div class="h-[64px] px-4 flex items-center gap-4 border-b border-light-border dark:border-xc-border shrink-0">
+                        <button onclick="closeWallpaperSettings()" class="hover:bg-gray-200 dark:hover:bg-xc-hover rounded-full p-2 -ml-2 transition-colors"><span class="material-symbols-rounded text-gray-800 dark:text-white">arrow_back</span></button>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Chat Wallpaper</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-4 gap-4">
+                             <div onclick="setWallpaper('default')" class="color-swatch bg-[#efeae2] dark:bg-[#0b141a] border-2 border-gray-300 flex items-center justify-center"><span class="material-symbols-rounded text-xs text-black/50">restart_alt</span></div>
+                             <div onclick="setWallpaper('#1a262d')" class="color-swatch bg-[#1a262d]"></div><div onclick="setWallpaper('#241d26')" class="color-swatch bg-[#241d26]"></div>
+                             <div onclick="setWallpaper('#342026')" class="color-swatch bg-[#342026]"></div><div onclick="setWallpaper('#d1e4ff')" class="color-swatch bg-[#d1e4ff]"></div>
+                             <div onclick="setWallpaper('#e7fce3')" class="color-swatch bg-[#e7fce3]"></div><div onclick="setWallpaper('#fff4d6')" class="color-swatch bg-[#fff4d6]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CHAT AREA -->
+        <main id="main-chat-area" class="absolute inset-0 md:static flex-1 bg-light-bg dark:bg-[#111b21] flex flex-col z-40 md:z-0 transition-all duration-300">
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="flex w-full h-full flex-col items-center justify-center bg-light-bg dark:bg-xc-bg border-b-[6px] border-app-primary z-10 transition-opacity duration-500 ease-in-out">
+                 <div class="text-center p-8">
+                     <div class="inline-flex items-center justify-center w-32 h-32 bg-gray-200 dark:bg-xc-container rounded-3xl mb-6"><span class="material-symbols-rounded text-6xl text-gray-400 dark:text-gray-500">chat_bubble</span></div>
+                    <h1 class="text-3xl font-light text-gray-700 dark:text-xc-text-primary mb-4">XclusiveChat Web</h1>
+                    <p class="text-gray-500 dark:text-xc-text-secondary text-sm leading-6 max-w-md">Send and receive messages without keeping your phone online.</p>
+                 </div>
+            </div>
+
+            <!-- Active Chat -->
+            <div id="active-chat" class="hidden opacity-0 w-full h-full absolute inset-0 transition-opacity duration-500 ease-in-out flex flex-col">
+                <div id="chat-bg-layer" class="absolute inset-0 bg-[#efeae2] dark:bg-[#0b141a] transition-colors duration-300"></div>
+                
+                <header class="h-[64px] px-4 bg-light-container dark:bg-xc-container flex items-center justify-between shrink-0 border-b border-light-border dark:border-xc-border z-20 shadow-sm relative">
+                    <div class="flex items-center gap-3 cursor-pointer">
+                        <button onclick="closeChat()" class="md:hidden text-gray-600 dark:text-xc-text-secondary pr-1"><span class="material-symbols-rounded">arrow_back</span></button>
+                        <div class="w-10 h-10 rounded-full overflow-hidden"><img id="header-avatar" src="" class="w-full h-full object-cover"></div>
+                        <div class="flex flex-col justify-center"><h2 id="header-name" class="text-gray-900 dark:text-white text-base font-semibold">User</h2><p class="text-gray-500 dark:text-xc-text-secondary text-xs">online</p></div>
+                    </div>
+                    <div class="flex gap-4 text-gray-600 dark:text-xc-text-secondary">
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-xc-hover rounded-full transition-colors"><span class="material-symbols-rounded">videocam</span></button>
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-xc-hover rounded-full transition-colors"><span class="material-symbols-rounded">call</span></button>
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-xc-hover rounded-full transition-colors"><span class="material-symbols-rounded">search</span></button>
+                    </div>
+                </header>
+
+                <div id="chat-container" class="flex-1 overflow-y-auto p-4 md:px-[5%] lg:px-[10%] relative custom-scrollbar">
+                     <div class="absolute inset-0 bg-repeat z-0 doodle-bg bg-chat-doodle-light dark:bg-chat-doodle-dark pointer-events-none"></div>
+                     <div id="messages-list" class="relative z-10 flex flex-col gap-1 pb-2"></div>
+                </div>
+
+                <footer class="min-h-[72px] px-4 py-3 bg-light-container dark:bg-xc-container flex items-end gap-3 z-20 shrink-0 border-t border-light-border dark:border-xc-border relative">
+                    <!-- Attachment & Emoji Toggles -->
+                    <div class="pb-2 flex gap-2 text-gray-500 dark:text-xc-text-secondary relative">
+                         <button onclick="toggleEmojiPicker()" class="p-2 hover:text-gray-800 dark:hover:text-white transition-colors"><span class="material-symbols-rounded">mood</span></button>
+                         <button onclick="toggleAttachmentMenu()" class="p-2 hover:text-gray-800 dark:hover:text-white transition-colors"><span class="material-symbols-rounded">add</span></button>
+                         
+                         <!-- ATTACHMENT MENU -->
+                         <div id="attachment-menu" class="hidden absolute bottom-14 left-0 bg-light-container dark:bg-xc-container rounded-xl shadow-2xl border border-light-border dark:border-xc-border p-2 flex-col gap-1 w-40 animate-[popIn_0.2s_ease-out]">
+                            <button class="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-xc-hover rounded-lg transition-colors text-sm text-gray-800 dark:text-white">
+                                <span class="material-symbols-rounded text-purple-500">description</span> Document
+                            </button>
+                            <button class="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-xc-hover rounded-lg transition-colors text-sm text-gray-800 dark:text-white">
+                                <span class="material-symbols-rounded text-blue-500">photo_library</span> Photos
+                            </button>
+                            <button class="flex items-center gap-3 p-2 hover:bg-gray-100 dark:hover:bg-xc-hover rounded-lg transition-colors text-sm text-gray-800 dark:text-white">
+                                <span class="material-symbols-rounded text-red-500">camera_alt</span> Camera
+                            </button>
+                         </div>
+
+                         <!-- EMOJI PICKER (Mockup) -->
+                         <div id="emoji-picker" class="hidden absolute bottom-14 left-0 bg-light-container dark:bg-xc-container rounded-xl shadow-2xl border border-light-border dark:border-xc-border w-64 h-64 animate-[popIn_0.2s_ease-out] overflow-hidden flex flex-col">
+                            <div class="p-2 bg-gray-50 dark:bg-xc-hover border-b border-light-border dark:border-xc-border flex justify-between text-xs text-gray-500">
+                                <span>Recent</span><span>Smileys</span><span>People</span>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-2 grid grid-cols-6 gap-1 text-xl cursor-pointer">
+                                <span onclick="insertEmoji('😂')">😂</span><span onclick="insertEmoji('👍')">👍</span><span onclick="insertEmoji('❤️')">❤️</span><span onclick="insertEmoji('😍')">😍</span><span onclick="insertEmoji('😭')">😭</span><span onclick="insertEmoji('😊')">😊</span>
+                                <span onclick="insertEmoji('🙌')">🙌</span><span onclick="insertEmoji('🔥')">🔥</span><span onclick="insertEmoji('✅')">✅</span><span onclick="insertEmoji('🎉')">🎉</span><span onclick="insertEmoji('🤔')">🤔</span><span onclick="insertEmoji('👋')">👋</span>
+                            </div>
+                         </div>
+                    </div>
+                    
+                    <div class="flex-1 bg-white dark:bg-xc-input rounded-2xl border border-light-border dark:border-transparent focus-within:border-app-primary px-4 py-2 min-h-[42px] mb-2 flex items-center shadow-sm">
+                        <input id="message-input" type="text" class="w-full bg-transparent border-none p-0 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-0 text-sm" 
+                        placeholder="Type a message" onkeydown="handleEnter(event)" oninput="toggleSendButton()">
+                    </div>
+                    <button id="send-btn" onclick="sendMessage()" class="mb-2 p-3 rounded-full bg-app-primary text-white hover:bg-blue-600 transition-all shadow-md">
+                        <span class="material-symbols-rounded text-[20px]" id="send-icon">mic</span>
+                    </button>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- AUTH LOGIC ---
+        function switchAuth(type) {
+            const login = document.getElementById('login-card');
+            const signup = document.getElementById('signup-card');
+            if (type === 'signup') {
+                login.classList.add('hidden');
+                signup.classList.remove('hidden');
+            } else {
+                signup.classList.add('hidden');
+                login.classList.remove('hidden');
+            }
+        }
+
+        function performLogin() {
+            const authLayer = document.getElementById('auth-layer');
+            const appLayer = document.getElementById('app-layer');
+            
+            // Simple Validation Mock
+            const email = document.getElementById('login-email').value;
+            if(email && !email.includes('@')) { alert("Please enter a valid email"); return; }
+
+            // Transition
+            authLayer.style.opacity = '0';
+            setTimeout(() => {
+                authLayer.classList.add('hidden');
+                appLayer.classList.remove('hidden');
+                // Reflow
+                void appLayer.offsetWidth;
+                appLayer.style.opacity = '1';
+            }, 500);
+        }
+
+        function toggleLogout() {
+            const authLayer = document.getElementById('auth-layer');
+            const appLayer = document.getElementById('app-layer');
+            
+            appLayer.style.opacity = '0';
+            toggleSettings(false);
+            setTimeout(() => {
+                appLayer.classList.add('hidden');
+                authLayer.classList.remove('hidden');
+                void authLayer.offsetWidth;
+                authLayer.style.opacity = '1';
+            }, 500);
+        }
+
+        // --- APP LOGIC ---
+        const contacts = [
+            { id: 1, name: "Jane Doe", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuA0CpLk9bpxyLPfosMLX-5UJVkdepbrzLOaX-yfQMTuVE__n-DKGX5FS3IpYtWsPEnGpyBEQNzQ4jToIHhHngei3Pf5zJyH8jwz5VUEgSWokJ-1oIrbNQLxTNHJ0AUi7zcUv6wJ7D3U62PjeKmEJS_RsEQMGgJdVFQrWRw9MCf3rDVYzUEjfGHkjzYvUfvk-PN1iOXcQRaO3tjPm9hJ-YuDGuWGCEzAyP3-MAPmyjhVtFvMFgp1ElyNKdw5DoA0LIJClBnq-l3B_vQ", lastMsg: "See you tomorrow!", time: "10:30 AM", unread: 0, messages: [] },
+            { id: 2, name: "Sarah Miller", avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuBxfu6Off9QI2gimmCd69vug8axInYie0gtwW_yIPVf78qkIw53CDDr2NiZOGWQEKDcqfbxr8aCxy3LwNpth_jXUUHc2_rcQKg0lRrrm30QXIHjToL1nZgNu8QMRsQHFCh2UpQk9JWzE7GxuG9Ug1WoMLD22tEQEMHgpPNk5BhpG67aZwPucTu-PXh5RIFfVqQzQr2Mm-kbg1Qxz6OhAPblaSaisQUCp5PieZXwOJfftzbEhIi1Sx2G7PKHx10YWbxk0HCIZD1p6W8", lastMsg: "Can you send the file?", time: "09:15 AM", unread: 2, messages: [] },
+            { id: 3, name: "Design Team", avatar: "https://ui-avatars.com/api/?name=DT&background=6366f1&color=fff", lastMsg: "Michael: Updates on the UI?", time: "Yesterday", unread: 0, group: true, messages: [] },
+            { id: 4, name: "David Kim", avatar: "https://randomuser.me/api/portraits/men/86.jpg", lastMsg: "Let's catch up soon.", time: "Tuesday", unread: 0, messages: [] },
+        ];
+
+        let currentChatId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            contacts.forEach(c => {
+                c.messages = [
+                    { text: "Hey there!", time: "10:00 AM", sent: false },
+                    { text: "Hello! How are you?", time: "10:01 AM", sent: true },
+                    { text: c.lastMsg, time: c.time, sent: false }
+                ];
+            });
+            renderChatList();
+        });
+
+        // --- TAB SWITCHING ---
+        function switchTab(tabId) {
+            // Update Nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            // Update Sidebar Content
+            document.getElementById('panel-chats').classList.add('hidden');
+            document.getElementById('panel-communities').classList.add('hidden');
+            document.getElementById('panel-status').classList.add('hidden');
+            
+            document.getElementById('panel-' + tabId).classList.remove('hidden');
+            document.getElementById('panel-' + tabId).classList.add('flex');
+        }
+        
+        function showCommunity() { switchTab('communities'); }
+
+        // --- CHAT RENDERING ---
+        function renderChatList(filterText = "") {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = "";
+            const filtered = contacts.filter(c => c.name.toLowerCase().includes(filterText.toLowerCase()));
+
+            filtered.forEach(chat => {
+                const isActive = currentChatId === chat.id ? 'bg-gray-200 dark:bg-xc-hover' : 'hover:bg-gray-100 dark:hover:bg-xc-hover';
+                const unreadBadge = chat.unread > 0 
+                    ? `<div class="min-w-[20px] h-[20px] rounded-full bg-app-primary text-white text-xs font-bold flex items-center justify-center px-1 shadow-sm">${chat.unread}</div>` 
+                    : '';
+                const timeColor = chat.unread > 0 ? 'text-app-primary font-semibold' : 'text-gray-500 dark:text-gray-400';
+                const msgColor = chat.unread > 0 ? 'text-gray-900 dark:text-white font-medium' : 'text-gray-500 dark:text-gray-400';
+
+                const item = document.createElement('div');
+                item.className = `flex items-center gap-3 p-3 cursor-pointer transition-all duration-200 rounded-xl mb-1 mx-1 ${isActive}`;
+                item.onclick = () => loadChat(chat.id);
+                
+                item.innerHTML = `
+                    <div class="relative shrink-0">
+                        <div class="w-[50px] h-[50px] rounded-full overflow-hidden bg-gray-300 ring-2 ring-transparent group-hover:ring-gray-300 dark:group-hover:ring-gray-600">
+                            <img src="${chat.avatar}" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0 flex flex-col justify-center py-1">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-[16px] text-gray-900 dark:text-white font-medium truncate">${chat.name}</h3>
+                            <span class="text-[11px] ${timeColor}">${chat.time}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <p class="text-[13px] ${msgColor} truncate pr-2">${chat.lastMsg}</p>
+                            ${unreadBadge}
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function filterChats() {
+            const query = document.getElementById('search-input').value;
+            renderChatList(query);
+        }
+
+        function loadChat(id) {
+            currentChatId = id;
+            const chat = contacts.find(c => c.id === id);
+            const emptyState = document.getElementById('empty-state');
+            const activeChat = document.getElementById('active-chat');
+            
+            if(!emptyState.classList.contains('hidden')) {
+                emptyState.style.opacity = '0';
+                setTimeout(() => {
+                    emptyState.classList.add('hidden');
+                    activeChat.classList.remove('hidden');
+                    void activeChat.offsetWidth;
+                    activeChat.style.opacity = '1';
+                }, 500);
+            } else {
+                activeChat.classList.remove('hidden');
+                activeChat.style.opacity = '1';
+            }
+
+            document.getElementById('header-avatar').src = chat.avatar;
+            document.getElementById('header-name').innerText = chat.name;
+            
+            const container = document.getElementById('messages-list');
+            container.innerHTML = `<div class="flex justify-center my-6 sticky top-2 z-10"><span class="bg-white/80 dark:bg-xc-container/80 backdrop-blur text-gray-600 dark:text-gray-300 text-xs px-3 py-1 rounded-lg shadow-sm font-medium border border-gray-200 dark:border-xc-border">Today</span></div>`;
+            
+            chat.messages.forEach(msg => appendMessageBubble(msg.text, msg.time, msg.sent, container));
+
+            document.body.classList.add('mobile-chat-active');
+            scrollToBottom();
+            chat.unread = 0;
+            renderChatList();
+        }
+
+        function closeChat() {
+            currentChatId = null;
+            document.body.classList.remove('mobile-chat-active');
+            setTimeout(() => renderChatList(), 300);
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('chat-container');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // --- ATTACHMENTS & EMOJIS ---
+        function toggleAttachmentMenu() {
+            const menu = document.getElementById('attachment-menu');
+            const picker = document.getElementById('emoji-picker');
+            picker.classList.add('hidden'); // Close emoji if open
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleEmojiPicker() {
+            const menu = document.getElementById('attachment-menu');
+            const picker = document.getElementById('emoji-picker');
+            menu.classList.add('hidden'); // Close attachment if open
+            picker.classList.toggle('hidden');
+        }
+
+        function insertEmoji(emoji) {
+            const input = document.getElementById('message-input');
+            input.value += emoji;
+            toggleSendButton();
+        }
+
+        // --- SENDING ---
+        function toggleSendButton() {
+            const input = document.getElementById('message-input');
+            const icon = document.getElementById('send-icon');
+            if (input.value.trim().length > 0) {
+                icon.innerText = 'send';
+            } else {
+                icon.innerText = 'mic';
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Close menus
+            document.getElementById('attachment-menu').classList.add('hidden');
+            document.getElementById('emoji-picker').classList.add('hidden');
+
+            const now = new Date();
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const chat = contacts.find(c => c.id === currentChatId);
+            
+            chat.messages.push({ text: text, time: time, sent: true });
+            chat.lastMsg = text;
+            chat.time = time;
+            
+            const idx = contacts.indexOf(chat);
+            contacts.splice(idx, 1);
+            contacts.unshift(chat);
+            renderChatList();
+
+            appendMessageBubble(text, time, true, document.getElementById('messages-list'));
+            input.value = "";
+            toggleSendButton();
+            scrollToBottom();
+        }
+
+        function appendMessageBubble(text, time, sent, container) {
+            const div = document.createElement('div');
+            const bgClass = sent ? 'bg-app-primary text-white' : 'bg-white dark:bg-xc-container text-gray-800 dark:text-white';
+            const metaClass = sent ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400';
+            const alignClass = sent ? 'items-end' : 'items-start';
+            const roundClass = sent ? 'rounded-l-2xl rounded-tr-2xl rounded-br-sm' : 'rounded-r-2xl rounded-tl-2xl rounded-bl-sm';
+            const checkIcon = sent ? '<span class="material-symbols-rounded text-[16px] ml-1">done_all</span>' : '';
+
+            div.className = `flex flex-col ${alignClass} mb-2 animate-[popIn_0.2s_ease-out]`;
+            div.innerHTML = `
+                <div class="${bgClass} ${roundClass} px-4 py-2 max-w-[85%] md:max-w-[65%] shadow-sm text-[15px] leading-relaxed relative group">
+                    <span>${text}</span>
+                    <span class="float-right ml-3 mt-2 text-[11px] flex items-center ${metaClass}">
+                        ${time} ${checkIcon}
+                    </span>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        // --- SETTINGS & THEME ---
+        function toggleSettings(show) {
+            const drawer = document.getElementById('settings-drawer');
+            if (show) drawer.classList.remove('-translate-x-full');
+            else drawer.classList.add('-translate-x-full');
+        }
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+        function openWallpaperSettings() {
+            document.getElementById('settings-wallpaper-view').classList.remove('translate-x-full');
+        }
+        function closeWallpaperSettings() {
+            document.getElementById('settings-wallpaper-view').classList.add('translate-x-full');
+        }
+        function setWallpaper(color) {
+            const layer = document.getElementById('chat-bg-layer');
+            if (color === 'default') { layer.style.backgroundColor = ''; } else { layer.style.backgroundColor = color; }
+        }
+    </script>
+</body>
+</html>

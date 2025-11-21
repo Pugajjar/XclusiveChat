@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>XclusiveChat Conversation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>.chat-bg-pattern {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDmP0tq5jUqBhejzlNX-Ld3WJl_hz3Z2y-E9KVB8ZbjPWRJMWKn0NEJsz3ZagsW0LaopZ-K0MyaMV9DcFNa3UnWgYePorvISx4crqlBk7mecXRVhXLKDCF5Ja20TQf6FJnskPBmC2nd1WUyQMmHGksQKBBQsHbgMypT733pyMZK0IUwQ5HvZt_WUu0O8hLiyWk1IQWz_gtmXZFDeQHYyuu72XwJzG3qos_ELIPZ2AGPSDn2WHd5OWsKPPk_3rtffrSMS2QVYb-fjvo)
+    }</style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#2b6cee",
+              "background-light": "#f6f6f8",
+              "background-dark": "#101622",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style type="text/tailwindcss">
+      .interactive-btn {
+        @apply transition-transform duration-150 ease-in-out hover:scale-110 active:scale-95;
+      }
+    </style>
+</head>
+<body class="font-display">
+<div class="relative flex h-screen w-full flex-col bg-[#1f1f1f] group/design-root overflow-hidden">
+<div class="flex h-full grow flex-col">
+<div class="flex flex-1 justify-center">
+<div class="flex flex-col w-full max-w-5xl flex-1">
+<header class="flex h-[59px] shrink-0 items-center justify-between whitespace-nowrap bg-[#292929] px-4">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of Sarah Day" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAm9D5lv4BlZN6rNP2miPy1tgLe02DmAL6b6wqwxWrrRPGOipvxAZ6NR_r1hTo0Fa_vLJu2HLw5JapBl1ooojX2SM_iEpvuiDNy0GC3JmqXmCwMhPs7zvM1U86CQktQc3YvHZGIrSZUiKS_MaROkgxA06fffIMZCuOMnXXKhlB3KJbTqyyvoVoDF5PrpFQ9wlu9PIrUTBE6t1J8u76DpIZc1RwR9nIvynUGAT0ftbRjPhZltUx4MqVudjC2h6Lf95PvpX281PGMlYg");'></div>
+<div class="flex flex-col justify-center">
+<p class="text-white text-base font-medium leading-normal line-clamp-1">Sarah Day</p>
+<p class="text-gray-400 text-sm font-normal leading-normal line-clamp-2">online</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="interactive-btn flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 text-gray-400 hover:bg-white/10">
+<span class="material-symbols-outlined text-2xl">videocam</span>
+</button>
+<button class="interactive-btn flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 text-gray-400 hover:bg-white/10">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+<button class="interactive-btn flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 text-gray-400 hover:bg-white/10">
+<span class="material-symbols-outlined text-2xl">more_vert</span>
+</button>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto bg-[#1f1f1f] bg-opacity-75 bg-blend-overlay chat-bg-pattern">
+<div class="flex flex-col gap-2 px-16 py-6">
+<p class="text-gray-400 bg-gray-800 rounded-lg text-xs font-semibold leading-normal p-2 px-3 text-center self-center uppercase">Today</p>
+<div class="flex items-start gap-3 p-1 max-w-xl">
+<div class="flex flex-1 flex-col gap-1 items-start">
+<div class="flex items-end gap-2">
+<p class="text-base font-normal leading-relaxed flex max-w-[500px] rounded-xl rounded-tl-none px-3 py-2 bg-[#292929] text-white">Hey, how's it going? I saw the new designs you pushed. They look great!</p>
+<p class="text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">10:45 AM</p>
+</div>
+</div>
+</div>
+<div class="flex items-start justify-end gap-3 p-1 max-w-xl self-end">
+<div class="flex flex-1 flex-col gap-1 items-end">
+<div class="flex items-end gap-2">
+<p class="text-base font-normal leading-relaxed flex max-w-[500px] rounded-xl rounded-tr-none px-3 py-2 bg-[#005C4B] text-white">Thanks! Glad you like them. I'm just wrapping up the final component now. Should be ready for review soon.</p>
+<div class="flex items-center gap-2">
+<p class="text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">10:46 AM</p>
+<span class="material-symbols-outlined text-[#53bdeb] !text-base">done_all</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-1 max-w-xl">
+<div class="flex flex-1 flex-col gap-1 items-start">
+<div class="flex items-end gap-2">
+<p class="text-base font-normal leading-relaxed flex max-w-[500px] rounded-xl rounded-tl-none px-3 py-2 bg-[#292929] text-white">Awesome, no rush. Let me know when it's up.</p>
+<p class="text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">10:46 AM</p>
+</div>
+</div>
+</div>
+<div class="flex items-start justify-end gap-3 p-1 max-w-xl self-end">
+<div class="flex flex-1 flex-col gap-1 items-end">
+<div class="flex items-end gap-2">
+<p class="text-base font-normal leading-relaxed flex max-w-[500px] rounded-xl rounded-tr-none px-3 py-2 bg-[#005C4B] text-white">Will do. By the way, have you seen this new design tool? <a class="text-[#53bdeb] underline" href="#">figma.com/cool-feature</a>. Looks pretty interesting.</p>
+<div class="flex items-center gap-2">
+<p class="text-gray-400 text-xs font-normal leading-normal whitespace-nowrap">10:48 AM</p>
+<span class="material-symbols-outlined text-[#53bdeb] !text-base">done_all</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-1 max-w-xl">
+<div class="flex flex-1 flex-col gap-1 items-start">
+<div class="flex items-end gap-2">
+<p class="text-base font-normal leading-relaxed flex max-w-[500px] rounded-xl rounded-tl-none px-3 py-2 bg-[#292929] text-[#00A884]"><em>typing...</em></p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="flex shrink-0 items-center gap-2 bg-[#1f1f1f] px-4 py-2 min-h-[62px]">
+<button class="interactive-btn flex items-center justify-center p-2 rounded-full text-gray-400 hover:bg-white/10">
+<span class="material-symbols-outlined text-2xl">mood</span>
+</button>
+<div class="relative flex-1">
+<input class="w-full h-12 bg-[#292929] text-white placeholder:text-gray-400 border border-[#525252] rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent px-4 text-base" placeholder="Type a message" type="text"/>
+<button class="interactive-btn absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center p-2 rounded-full text-gray-400 hover:bg-white/20">
+<span class="material-symbols-outlined text-2xl -rotate-45">attach_file</span>
+</button>
+</div>
+<button class="interactive-btn flex items-center justify-center p-2 size-12 rounded-full text-white bg-[#00A884] hover:bg-[#017a63] shrink-0">
+<span class="material-symbols-outlined text-2xl">mic</span>
+</button>
+</footer>
+</div>
+</div>
+</div>
+</div>
+</body></html>

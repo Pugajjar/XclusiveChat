@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>XclusiveChat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#3b82f6",
+            "background-light": "#f6f6f8",
+            "background-dark": "#1f1f1f",
+            "secondary-dark": "#292929",
+            "border-dark": "#525252",
+            "text-primary-dark": "#e9edef",
+            "text-secondary-dark": "#8696a0"
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+    .interactive-element {
+        transition: transform 0.2s ease-in-out;
+    }
+    .interactive-element:hover {
+        transform: scale(1.03);
+    }
+    .interactive-element:active {
+        transform: scale(0.97);
+    }
+  </style>
+</head>
+<body class="bg-background-dark font-display">
+<div class="flex h-screen w-full">
+<aside class="flex h-full w-24 flex-col items-center border-r border-border-dark bg-secondary-dark py-6">
+<div class="flex flex-col items-center justify-between h-full">
+<div class="flex flex-col items-center gap-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" data-alt="User profile picture of David Miller" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdEHwbTH9hG7OjwQ9SQryMONIGLsyba_lH9Kl3rnYzhqspX0KZZQBvALYhU5xxnnc7lRdQfTukVgYxZGUYOfRk_GskNTkdr30D8TnrlD9EBrf-C291tpyoYL9i6PH9Ak5Qu6d_AjTrt9E73bd-65VbqC7HgwtIS4GASp2V4qxIE271PZIyFYdRiC0nUN_kgGy5QYhqtrS7rn4exYi6KxXml8Y5IBYBZpjd43HcapZLoe4xx1ISCwUwybc_K85E4vPiKCzNNSU7y18");'></div>
+<nav class="flex flex-col items-center gap-2">
+<a class="relative flex h-14 w-14 items-center justify-center rounded-xl bg-primary/20 text-primary interactive-element" href="#">
+<div class="absolute left-0 h-8 w-1 rounded-r-full bg-primary"></div>
+<span class="material-symbols-outlined !text-3xl">chat</span>
+</a>
+<a class="flex h-14 w-14 items-center justify-center rounded-xl text-text-secondary-dark hover:bg-white/5 interactive-element" href="#">
+<span class="material-symbols-outlined !text-3xl">call</span>
+</a>
+<a class="flex h-14 w-14 items-center justify-center rounded-xl text-text-secondary-dark hover:bg-white/5 interactive-element" href="#">
+<span class="material-symbols-outlined !text-3xl">group</span>
+</a>
+</nav>
+</div>
+<div class="flex flex-col items-center gap-2">
+<a class="flex h-14 w-14 items-center justify-center rounded-xl text-text-secondary-dark hover:bg-white/5 interactive-element" href="#">
+<span class="material-symbols-outlined !text-3xl">archive</span>
+</a>
+<a class="flex h-14 w-14 items-center justify-center rounded-xl text-text-secondary-dark hover:bg-white/5 interactive-element" href="#">
+<span class="material-symbols-outlined !text-3xl">settings</span>
+</a>
+</div>
+</div>
+</aside>
+<main class="flex w-full max-w-md flex-col border-r border-border-dark bg-background-dark">
+<header class="flex flex-col gap-3 p-4">
+<h1 class="text-2xl font-semibold text-text-primary-dark">Chats</h1>
+<div class="relative w-full">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+<span class="material-symbols-outlined text-text-secondary-dark">search</span>
+</div>
+<input class="form-input h-11 w-full rounded-lg border-none bg-secondary-dark pl-12 text-sm text-text-primary-dark placeholder:text-text-secondary-dark focus:outline-none focus:ring-1 focus:ring-border-dark" placeholder="Search or start new chat" type="search"/>
+</div>
+<div class="flex gap-2">
+<button class="flex h-8 items-center justify-center rounded-full bg-primary px-4 text-sm font-medium text-white interactive-element">All</button>
+<button class="flex h-8 items-center justify-center rounded-full bg-secondary-dark px-4 text-sm font-medium text-text-secondary-dark hover:bg-white/5 interactive-element">Unread</button>
+<button class="flex h-8 items-center justify-center rounded-full bg-secondary-dark px-4 text-sm font-medium text-text-secondary-dark hover:bg-white/5 interactive-element">Favorites</button>
+<button class="flex h-8 items-center justify-center rounded-full bg-secondary-dark px-4 text-sm font-medium text-text-secondary-dark hover:bg-white/5 interactive-element">Groups</button>
+</div>
+</header>
+<div class="relative flex flex-1 flex-col overflow-y-auto">
+<div class="p-4">
+<div class="relative flex flex-col gap-4 rounded-xl border border-border-dark bg-secondary-dark p-4">
+<button class="absolute top-2 right-2 text-text-secondary-dark hover:text-text-primary-dark interactive-element">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="flex items-center gap-4">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined">sync</span>
+</div>
+<div class="flex flex-col">
+<p class="font-bold leading-tight text-text-primary-dark">Get new message notifications</p>
+<p class="text-sm font-normal leading-normal text-text-secondary-dark">Turn on background sync to receive notifications.</p>
+</div>
+</div>
+<button class="flex h-8 w-fit cursor-pointer items-center justify-center self-end rounded-full bg-primary px-4 text-sm font-medium text-white interactive-element">
+<span class="truncate">Turn on</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-2 px-4">
+<div class="flex cursor-pointer items-center gap-4 rounded-xl bg-secondary-dark p-3 hover:bg-white/5 interactive-element">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Jane Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0CpLk9bpxyLPfosMLX-5UJVkdepbrzLOaX-yfQMTuVE__n-DKGX5FS3IpYtWsPEnGpyBEQNzQ4jToIHhHngei3Pf5zJyH8jwz5VUEgSWokJ-1oIrbNQLxTNHJ0AUi7zcUv6wJ7D3U62PjeKmEJS_RsEQMGgJdVFQrWRw9MCf3rDVYzUEjfGHkjzYvUfvk-PN1iOXcQRaO3tjPm9hJ-YuDGuWGCEzAyP3-MAPmyjhVtFvMFgp1ElyNKdw5DoA0LIJClBnq-l3B_vQ");'></div>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-center">
+<p class="font-medium leading-normal text-text-primary-dark line-clamp-1">Jane Doe</p>
+<p class="text-xs font-normal leading-normal text-text-secondary-dark">10:48 AM</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm font-normal leading-normal text-text-secondary-dark line-clamp-1">Sounds good, see you then!</p>
+</div>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 rounded-xl bg-secondary-dark p-3 hover:bg-white/5 interactive-element">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Sarah Miller" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBxfu6Off9QI2gimmCd69vug8axInYie0gtwW_yIPVf78qkIw53CDDr2NiZOGWQEKDcqfbxr8aCxy3LwNpth_jXUUHc2_rcQKg0lRrrm30QXIHjToL1nZgNu8QMRsQHFCh2UpQk9JWzE7GxuG9Ug1WoMLD22tEQEMHgpPNk5BhpG67aZwPucTu-PXh5RIFfVqQzQr2Mm-kbg1Qxz6OhAPblaSaisQUCp5PieZXwOJfftzbEhIi1Sx2G7PKHx10YWbxk0HCIZD1p6W8");'></div>
+<div class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background-dark bg-green-500"></div>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-center">
+<p class="font-medium leading-normal text-text-primary-dark line-clamp-1">Sarah Miller</p>
+<p class="text-xs font-normal leading-normal text-text-secondary-dark">10:42 AM</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm font-normal leading-normal text-primary line-clamp-1">Typing...</p>
+<div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">2</div>
+</div>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 rounded-xl bg-secondary-dark p-3 hover:bg-white/5 interactive-element">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Alex Johnson" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB8yCOHboG1jXWJd9fYDZpvabiTFF_gVGeM6UNOq1CR_ninlKg8Qr0JgZvoobzOnDTaPe5fP1LDX4K_SGGM0d_oifmEOdaqFcE5cSKEHB6lq7Hos37YJaeLoAzXgtlIi65NQdcf57uzQN3F2q8eLeV3l-5-uT0Ja-8csYnC1Yj7tM1nPTCixHs2cO_CP86PseF3yYIjZvfO9dhJPu9TW-MTSiEUrjlLsNkDp4RaAaY4enj2dOeAtNqk-a8BYlFRnbq-QZyx6iDeB8Y");'></div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-center">
+<p class="font-medium leading-normal text-text-primary-dark line-clamp-1">Alex Johnson</p>
+<p class="text-xs font-normal leading-normal text-text-secondary-dark">Yesterday</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm font-normal leading-normal text-text-secondary-dark line-clamp-1">Perfect! I'll send the file over shortly.</p>
+</div>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 rounded-xl bg-secondary-dark p-3 hover:bg-white/5 interactive-element">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture for Design Team group" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDdPtTOgu5-crR3PiHwH8d-dGwgRgsoYskU8ClZZf4t2X0Tnr32dtK6gDC0HMowZbH6BF6fBzXEcsKRap0Npv4nVPsMfvt8pGXSLy8wZRMORnviGjXY4lpswnDvmbgzj_kArstppp5SDBLoETk8g_Xi8IpxMUVDu4UmFVsQQEQG0FiXexUSK3ErbUP73JWY4xRSTNRCk5QjwAiTdZaGYGBDT6dldU-2K7MsJbwg8ihkuo7Ds9366beeK-9DVvOt8JK6qZiHiqqDc2s");'></div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-center">
+<p class="font-medium leading-normal text-text-primary-dark line-clamp-1">Design Team</p>
+<p class="text-xs font-normal leading-normal text-text-secondary-dark">Yesterday</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm font-normal leading-normal text-text-secondary-dark line-clamp-1">Michael: Can someone review this?</p>
+<div class="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">5</div>
+</div>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 rounded-xl bg-secondary-dark p-3 hover:bg-white/5 interactive-element">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Profile picture of Emily Carter" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD5u54B0L9ZxbB2gDSDG3xbqtInCE5lUiX0QZBXbS6haJ4bZqllUPD0hQbwFFnHtAi-AGbvT49E8lYFPs4FmmrBsy4O52eAUZAtREgDecak2Jp0afLSr0hWFTlVas2wv5vUvmIZwRowCM6P-WTFYgSiz6FPXrr3Nv2Frp_PYMn5TOE8khf0LjvdOkY9IZEhK_34GbMUUSpME3iEI6x_oI8lqDpJxw-bDxDNJ3D2lw9qLHFA7nGXEe3Xfjc4fMTSlhuGXDaGyD_rAVY");'></div>
+<div class="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background-dark bg-green-500"></div>
+</div>
+<div class="flex-1 flex flex-col justify-center">
+<div class="flex justify-between items-center">
+<p class="font-medium leading-normal text-text-primary-dark line-clamp-1">Emily Carter</p>
+<p class="text-xs font-normal leading-normal text-text-secondary-dark">04/15/24</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-sm font-normal leading-normal text-text-secondary-dark line-clamp-1">Thanks for the update!</p>
+</div>
+</div>
+</div>
+</div>
+<button class="absolute bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-white shadow-lg hover:bg-primary/90 interactive-element">
+<span class="material-symbols-outlined !text-3xl">add_comment</span>
+</button>
+</div>
+</main>
+<section class="hidden flex-1 items-center justify-center bg-secondary-dark md:flex">
+<div class="text-center text-text-secondary-dark">
+<h2 class="text-2xl font-medium text-text-primary-dark">XclusiveChat for Web</h2>
+<p>Select a chat to start messaging</p>
+</div>
+</section>
+</div>
+</body></html>

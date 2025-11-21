@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>XclusiveChat - Voice/Video Call</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#2b6cee",
+              "background-light": "#f6f6f8",
+              "background-dark": "#1f1f1f",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-white">
+<div class="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden p-4 md:p-8">
+<!-- Background Image/Video Area -->
+<div class="absolute inset-0 z-0">
+<div class="h-full w-full bg-cover bg-center bg-no-repeat blur-xl scale-110" data-alt="A blurred, abstract representation of the caller's profile picture used as a background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjIlooIwjn2NRsgz8Zpj3eJ69gn--RmGpKbh3iY3eZN77EOWtlnd99gJClBn06PbrXecWbJ_tMUeTUm8E063sgQkUSAxBi3xJ9OGr4GFgLN5K7rovYtc4wpRjac5RkBd4nQXCkZuUeRpL3YE6i1RShZPtOwtqDFBhtYNMGVZ2U13SGDYqkxo5oUy0RTD9y5GRQIYh_0ytYSJjF7I1kOd4N5UyK4VAZEht-GN9ryiI-vMDI94WDTPdcFOiv5ZDXHOl9seYYdXhOqBg");'></div>
+<div class="absolute inset-0 bg-black/60"></div>
+</div>
+<!-- Main Content Layout -->
+<div class="relative z-10 flex h-full w-full max-w-5xl flex-col items-center justify-between py-8">
+<!-- ProfileHeader Component -->
+<div class="flex w-full flex-col items-center gap-4">
+<div class="flex flex-col items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 border-4 border-white/20 shadow-lg" data-alt="Profile picture of Jordan Smith" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBl6rZLoDdLyyhmUaGCWV5YZ3GyWhwEoOM5Yy5gnCX_hrbtoHbm-yOnA7MoaniX_TR4cIoPJiEjCDaZCzUF4PPuUU-0bd-1SlSPS2yaBUVxcJiWwYX5jx-d0tUjcDE6DxV-2-P4Zmi2cDCMDkoeGtGL9SbxRMOSAjfhhFJeqSAAy2U4Q6ksGoDQYXOu9OhLu3QfmMZlY_1Pw4rpDGw_4D1Bu_zegdxbUVDoMEAnukHasPLs3KJSqc8SL29cUYBZO80IbBz9jgrTigc");'></div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-white text-3xl font-bold tracking-tight text-center">Jordan Smith</p>
+<p class="text-white/70 text-lg font-normal leading-normal text-center mt-1">01:23</p>
+</div>
+</div>
+</div>
+<!-- User Video Preview -->
+<div class="absolute bottom-36 right-0 sm:bottom-40 sm:right-8 w-36 h-48 sm:w-48 sm:h-64 rounded-lg overflow-hidden border-2 border-white/20 shadow-2xl cursor-grab active:cursor-grabbing">
+<img alt="User's video feed preview" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs03D-OXJynbE6Bo1FK8-R_XO-c1pjOd8WQHKVvzQt2y-h2_4gHywyFSNA4Xs4Ip7kDodYNiUGT05WrEhKjbFnSA0lO2cYyM83UjELcQ-U_3ZHQ7LA41B5gKA6N6KF44qYyOawVF0vqpGNjdAzM5jao0ld0p3-EE11PxGE4iBGWCv0aKASdLOjHrdH_gzvHItxFoCKC7TUeMlZ0EsDg5fWuqyWQGOp47C6rRAnKq7WnAnxi2pUe5h7owMZvFb0nYkAU26E6f5dwZc"/>
+</div>
+<!-- ActionsBar Component -->
+<div class="w-full max-w-md">
+<div class="flex items-center justify-center gap-4 rounded-full bg-black/30 p-3 backdrop-blur-md border border-neutral-500/50">
+<button class="flex h-14 w-14 flex-col items-center justify-center gap-2 rounded-full bg-white/10 text-center text-white transition-transform hover:scale-110 hover:bg-white/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-2xl">videocam</span>
+</button>
+<button class="flex h-14 w-14 flex-col items-center justify-center gap-2 rounded-full bg-primary text-center text-white transition-transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-2xl">mic_off</span>
+</button>
+<button class="flex h-14 w-14 flex-col items-center justify-center gap-2 rounded-full bg-white/10 text-center text-white transition-transform hover:scale-110 hover:bg-white/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-2xl">volume_up</span>
+</button>
+<button class="flex h-14 w-28 flex-col items-center justify-center gap-2 rounded-full bg-[#FF453A] text-center text-white transition-transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-2xl">call_end</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>
